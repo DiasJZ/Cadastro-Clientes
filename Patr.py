@@ -1,173 +1,257 @@
-# Importando dependencias
-from tkinter import*
-from tkinter import Tk, ttk
-from tkinter.ttk import *
-from tkinter import*
-from PIL import Image, ImageTk
+from tkinter import *
+from tkinter import ttk
+import sqlite3
+import  webbrowser
 
-# cores
-co0 = "#2e2d2b"  # Preta
-co1 = "#feffff"  # branca
-co3 = "#38576b"  # valor
-co4 = "#403d3d"   # letra
-co9 = "#e9edf5"   # + verde
+root = Tk()
 
-# -------------------------- Criando a janela ---------------------------
+class Relatorios():
+    def mostrar(self):
+        webbrowser.open('ficha_Cliente_'+self.nomerel+'.pdf')
+    def Gerar_Ficha(self):
 
-janela = Tk ()
-janela.title ("")
-janela.geometry('380x500')
-janela.configure(background=co1)
-janela.resizable(width=FALSE, height=FALSE)
+        self.codigorel = self.entry_codigo.get()
+        self.nomerel = self.entry_nome.get()
+        self.telefonerel = self.entry_telfone.get()
+        self.cidaderel = self.entry_cidade.get()
 
-style = ttk.Style(janela)
-style.theme_use("clam")
+        self.ficha_cliente.setFont("Helvetica-Bold",20)
+        self.ficha_cliente.drawString(200,780,'FICHA DO CLIENTE')
 
-# -------------------------- Frames ---------------------------
+        self.ficha_cliente.setFont("Helvetica-Bold",20)
+        self.ficha_cliente.drawString(50,680,'Código: '+self.codigorel)
+        self.ficha_cliente.drawString(50, 650, 'Nome: ' + self.nomerel)
+        self.ficha_cliente.drawString(50, 620, 'Telefone: ' + self.telefonerel)
+        self.ficha_cliente.drawString(50, 590, 'Cidade: ' + self.cidaderel)
 
-frameCima = Frame(janela, width=380, height=50,  relief="flat",)
-frameCima.grid(row=0, column=0,columnspan=2)
-
-frameBaixo = Frame(janela,width=380, height=400, relief="flat")
-frameBaixo.grid(row=2, column=0, pady=10)
-
-frameResultado = Frame(janela,width=364, height=50, relief="flat")
-frameResultado.grid(row=1, column=0, pady=10)
-
-# Dividindo o Frame
-
-frameAtivos = Frame(frameBaixo,width=180, height=370, relief="flat")
-frameAtivos.grid(row=0, column=0, pady=0, padx=5)
-
-framePassivos = Frame(frameBaixo,width=180, height=370, relief="flat")
-framePassivos.grid(row=0, column=1, pady=0,)
-
-app_ = Label(frameCima,text="Patrimônio Líquido",compound=LEFT, padx=5, relief=FLAT, anchor=NW, font=('Arial 15'), fg=co4 )
-app_.place(x=50, y=0)
-
-# --------------------------- Entrando os Ativos ----------------------------
-
-l_nome = Label(frameAtivos, text="Insira Ativos",padx=10, width=35, height=1,anchor=NW, font=('Verdana 11 '), fg=co0)
-l_nome.place(x=0, y=0)
-
-# Valor da casa
-l_casa = Label(frameAtivos, text="Valor da casa", height=1,anchor=E, font=('Verdana 9 '), fg=co0)
-l_casa.place(x=10, y=40)
-
-e_valor_casa = Entry(frameAtivos, width=10, font=('Ivy 12 '), justify='center',relief="solid")
-e_valor_casa.place(x=10, y=65)
-
-# Investimentos e Poupança
-l_investimentos = Label(frameAtivos, text="Investimentos", height=1,anchor=E, font=('Verdana 9 '), fg=co0)
-
-l_investimentos.place(x=10, y=230)
-e_valor_investimentos = Entry(frameAtivos, width=10, font=('Ivy 12 '), justify='center',relief="solid")
-e_valor_investimentos.place(x=10, y=255)
+        self.ficha_cliente.rect(20,430,550,400, fill=False,stroke=True)
 
 
-# Veículos
-l_veiculos = Label(frameAtivos, text="Veículos", height=1,anchor=E, font=('Verdana 9 '), fg=co0)
-l_veiculos.place(x=10, y=165)
 
-e_valor_veiculos = Entry(frameAtivos, width=10, font=('Ivy 12 '), justify='center',relief="solid")
-e_valor_veiculos.place(x=10, y=195)
+        self.ficha_cliente.showPage()
+        self.ficha_cliente.save()
+        self.mostrar()
 
-#  Imóveis
-l_imoveis = Label(frameAtivos, text="Imóveis", height=1,anchor=E, font=('Verdana 9 '), fg=co0)
-l_imoveis.place(x=10, y=105)
+class Funcoes():
 
-e_valor_imovel = Entry(frameAtivos, width=10, font=('Ivy 12 '), justify='center',relief="solid")
-e_valor_imovel.place(x=10, y=125)
+    def limpar_campos(self):
+        self.entry_codigo.delete(0, END)
+        self.entry_nome.delete(0, END)
+        self.entry_telfone.delete(0, END)
+        self.entry_cidade.delete(0, END)
+    def db_conect(self):
+        self.conexao = sqlite3.connect('clientes_bd.bd')
+        self.cursor = self.conexao.cursor()
+        print("conectando ao banco de dados");
+    def db_desconect(self):
+        self.conexao.close();print("Desconectando ao banco de dados sqlite3");
+    def criar_tabela(self):
+        self.db_conect();
+        #Criando uma tabela se ela não existir
+        self.cursor.execute("""
+        CREATE TABLE IF NOT EXISTS clientes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            Nome VARCHAR(50) NOT NULL,
+            telefone INTEGER(11) NOT NULL,
+            cidade VARCHAR(40));""");
+        self.conexao.commit(); print("banco de dados criado");
+        self.db_desconect()
+    def capturar_campos(self):
+        self.codigo = self.entry_codigo.get()
+        self.nome = self.entry_nome.get()
+        self.telefone = self.entry_telfone.get()
+        self.cidade = self.entry_cidade.get()
+    def add_cliente(self):
+        #obter dados dos campos
+        self.capturar_campos()
+        self.db_conect()
+        self.cursor.execute("""INSERT INTO clientes (nome,telefone,cidade) 
+        VALUES(?,?,?)""",(self.nome,self.telefone,self.cidade))
+        self.conexao.commit()
+        self.db_desconect()
+        self.select_lista()
+        self.limpar_campos()
+    def select_lista(self):
+        self.lista_grid.delete(*self.lista_grid.get_children())
+        self.db_conect()
+        lista = self.cursor.execute("""SELECT id , nome,telefone,cidade
+         FROM clientes ORDER BY nome ASC;""")
+        for l in lista:
+            self.lista_grid.insert("",END,values=l)
+        self.db_desconect()
+    def OnDubleClick(self,event):
+        self.limpar_campos()
+        self.lista_grid.selection()
+
+        for x in self.lista_grid.selection():
+            col1,col2,col3,col4 = self.lista_grid.item(x,'values')
+            self.entry_codigo.insert(END, col1)
+            self.entry_nome.insert(END, col2)
+            self.entry_telfone.insert(END, col3)
+            self.entry_cidade.insert(END, col4)
+    def deleta_cliente(self):
+        self.capturar_campos()
+        self.db_conect()
+        self.cursor.execute("""DELETE FROM clientes WHERE id = ?""",(self.codigo))
+        self.conexao.commit()
+        self.db_desconect()
+        self.limpar_campos()
+        self.select_lista()
+
+    def alterar_cliente(self):
+        self.capturar_campos()
+        self.db_conect()
+        self.cursor.execute("""UPDATE clientes SET nome = ?, telefone = ?, cidade = ? 
+        WHERE id = ?;
+        """,(self.nome,self.telefone,self.cidade,self.codigo))
+        self.conexao.commit()
+        self.db_desconect()
+        self.limpar_campos()
+        self.select_lista()
+
+    def Buscar_Cliente(self):
+        self.db_conect()
+        self.lista_grid.delete(*self.lista_grid.get_children())
+
+        self.entry_nome.insert(END,'%')
+        nome = '%'+self.entry_nome.get()
+        self.cursor.execute("""SELECT * FROM clientes WHERE Nome LIKE '%s' COLLATE NOCASE ORDER BY Nome ASC"""%nome)
+        Resultado_busca = self.cursor.fetchall()
+
+        for cliente in Resultado_busca:
+            self.lista_grid.insert("",END,values=cliente)
+        self.db_desconect()
+
+        self.limpar_campos()
+        self.db_desconect()
 
 
-# Outros ativos
-l_ativos = Label(frameAtivos, text="Outros ativos", height=1,anchor=E, font=('Verdana 9 '), fg=co0)
-l_ativos.place(x=10, y=295)
 
-e_outros_ativos = Entry(frameAtivos, width=10, font=('Ivy 12 '), justify='center',relief="solid")
-e_outros_ativos.place(x=10, y=315)
+class Aplication(Funcoes,Relatorios):
+    def __init__(self):
+        self.root = root
+        self.tela()
+        self.frames_tela()
+        self.grid_cliente()
+        self.widgets_frame1()
+        self.Menus()
+        self.criar_tabela()
+        self.select_lista()
+        root.mainloop()
 
-# --------------------------- Entrando Passivos ----------------------------
+    def tela(self):
+        self.root.title("Cadastro de Clientes")
+        self.root.configure(background='#dcdcdc')
+        self.root.geometry("800x600")
+        self.root.resizable(True, True)
+        self.root.maxsize(width=850, height=700)
+        self.root.minsize(width=400, height=300)
 
-l_nome = Label(framePassivos, text="Insira Passivos",padx=10, width=35, height=1,anchor=NW, font=('Verdana 11 '), fg=co0)
-l_nome.place(x=0, y=0)
+    def frames_tela(self):
+        self.frame1 = Frame(self.root, bd=4, bg="#fff",
+                            highlightbackground="#dcdcdc", highlightthickness=3)
+        self.frame1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
 
-# Hipoteca ($)
-l_hipoteca = Label(framePassivos, text="Hipoteca", height=1,anchor=E, font=('Verdana 9 '), fg=co0)
-l_hipoteca.place(x=10, y=40)
+        self.frame2 = Frame(self.root, bd=4, bg="#fff",
+                            highlightbackground="#dcdcdc", highlightthickness=3)
+        self.frame2.place(relx=0.02, rely=0.5, relwidth=0.96, relheight=0.46)
 
-e_valor_hipoteca = Entry(framePassivos, width=10, font=('Ivy 12 '), justify='center',relief="solid")
-e_valor_hipoteca.place(x=10, y=65)
+    def widgets_frame1(self):
+        # botão limpar
+        self.bt_limpar = Button(self.frame1, text="Limpar",
+                                bg="#808080", fg="white", font=('verdana', 8, 'bold'), command=self.limpar_campos)
+        self.bt_limpar.place(relx=0.2, rely=0.1, relwidth=0.1, relheight=0.15)
+
+        # botão Buscar
+        self.bt_buscar = Button(self.frame1, text="Buscar",
+                                bg="#808080", fg="white", font=('verdana', 8, 'bold'),command=self.Buscar_Cliente)
+        self.bt_buscar.place(relx=0.3, rely=0.1, relwidth=0.1, relheight=0.15)
+
+        # botão Novo
+        self.bt_novo = Button(self.frame1, text="Novo",
+                                bg="#808080", fg="white", font=('verdana', 8, 'bold'),command=self.add_cliente)
+        self.bt_novo.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.15)
+
+        # Botão Altera
+        self.bt_alterar = Button(self.frame1, text="Alterar",
+                                bg="#808080", fg="white", font=('verdana', 8, 'bold'),command=self.alterar_cliente)
+        self.bt_alterar.place(relx=0.7, rely=0.1, relwidth=0.1, relheight=0.15)
+
+        # Botão Apagar
+        self.bt_apagar = Button(self.frame1, text="Apagar",
+                                bg="#808080", fg="white", font=('verdana', 8, 'bold'),command=self.deleta_cliente)
+        self.bt_apagar.place(relx=0.8, rely=0.1, relwidth=0.1, relheight=0.15)
+
+        # label e entry - codigo -----------------------------
+        self.lb_codigo = Label(self.frame1, text="Codigo",
+                               bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+        self.lb_codigo.place(relx=0.05, rely=0.05)
+
+        self.entry_codigo = Entry(self.frame1, text="Codigo",
+                                  bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+        self.entry_codigo.place(relx=0.05, rely=0.15, relwidth=0.08)
+
+        # label e entry - nome ----------------------------------
+        self.lb_nome = Label(self.frame1, text="Nome",
+                             bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+        self.lb_nome.place(relx=0.05, rely=0.35)
+
+        self.entry_nome = Entry(self.frame1,
+                                bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+        self.entry_nome.place(relx=0.05, rely=0.45, relwidth=0.7)
+
+        # label e entry - Telfone--------------------------
+        self.lb_telfone = Label(self.frame1, text="Telefone",
+                                bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+        self.lb_telfone.place(relx=0.05, rely=0.6)
+
+        self.entry_telfone = Entry(self.frame1,
+                                   bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+        self.entry_telfone.place(relx=0.05, rely=0.7, relwidth=0.4)
+
+        # label e entry - Cidade -----------------------
+        self.lb_cidade = Label(self.frame1, text="Cidade",
+                               bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+        self.lb_cidade.place(relx=0.5, rely=0.6)
+
+        self.entry_cidade = Entry(self.frame1,
+                                  bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+        self.entry_cidade.place(relx=0.5, rely=0.7, relwidth=0.5)
+
+    def grid_cliente(self):
+        self.lista_grid = ttk.Treeview(self.frame2, height=3,
+                                       column=('col1', 'col2', 'col3', 'col4'))
+        self.lista_grid.heading("#0", text='')
+        self.lista_grid.heading("#1", text='CODIGO')
+        self.lista_grid.heading("#2", text='NOME')
+        self.lista_grid.heading("#3", text='TELEFONE')
+        self.lista_grid.heading("#4", text='CIDADE')
+        self.lista_grid.column("#1", width=25)
+        self.lista_grid.column("#2", width=200)
+        self.lista_grid.column("#3", width=125)
+
+        self.lista_grid.column("#0", width=1)
+        self.lista_grid.column("#4", width=125)
+        self.lista_grid.place(relx=0.005, rely=0.1, relwidth=0.95, relheight=0.86)
+
+        self.scrol_lista = Scrollbar(self.frame2, orient='vertical')
+        self.lista_grid.configure(yscroll=self.scrol_lista.set)
+        self.scrol_lista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.88)
+        self.lista_grid.bind("<Double-1>",self.OnDubleClick)
+
+    def Menus(self):
+        Menubar = Menu(self.root)
+        self.root.config(menu=Menubar)
+        filemenu = Menu(Menubar)
+        filemenu2 = Menu(Menubar)
+
+        def Quit(): self.root.destroy()
+
+        Menubar.add_cascade(label="opções",menu=filemenu)
+        Menubar.add_cascade(label="Funções", menu=filemenu2)
+
+        filemenu.add_command(label="Sair",command=Quit)
+        filemenu2.add_command(label="Limpar campos", command=self.limpar_campos)
 
 
-#  Empréstimos de carro
-l_carro = Label(framePassivos, text="Empréstimos de carro", height=1,anchor=E, font=('Verdana 9 '), fg=co0)
-l_carro.place(x=10, y=105)
-
-e_valor_carro = Entry(framePassivos, width=10, font=('Ivy 12 '), justify='center',relief="solid")
-e_valor_carro.place(x=10, y=125)
-
-
-# Empréstimos Estudantis
-l_estudante = Label(framePassivos, text="Empréstimos Estudantis", height=1,anchor=E, font=('Verdana 9 '), fg=co0)
-l_estudante.place(x=10, y=165)
-
-e_valor_estudante = Entry(framePassivos, width=10, font=('Ivy 12 '), justify='center',relief="solid")
-e_valor_estudante.place(x=10, y=195)
-
-
-# Outras dívidas
-l_dividas = Label(framePassivos, text="Outras dívidas", height=1,anchor=E, font=('Verdana 9 '), fg=co0)
-l_dividas.place(x=10, y=230)
-
-e_valor_dividas = Entry(framePassivos, width=10, font=('Ivy 12 '), justify='center',relief="solid")
-e_valor_dividas.place(x=10, y=255)
-
-# --------------------------- Resultado ----------------------------
-
-l_resultado = Label(frameResultado, text='R${:,.2f}'.format(00),padx=10, width=15, height=1,anchor=NE, font=('Verdana 25 bold'), fg=co0)
-l_resultado.place(x=0, y=7)
-
-botao_calcular = Button(framePassivos,width=12, anchor=CENTER, text=" Calcular".upper(), overrelief=RIDGE,  font=('ivy 9 bold '), fg=co0 )
-botao_calcular.place(x=10, y=310)
-
-# # Função para patrimônio líquido ------------------------------------------------
-
-def calcular():
-    # Obetendo os valores Ativos
-    ativo_1 = e_valor_casa.get()
-    ativo_2 = e_valor_imovel.get()
-    ativo_3 = e_valor_veiculos.get()
-    ativo_4 = e_valor_investimentos.get()
-    ativo_5 = e_outros_ativos.get()
-
-    # Obetendo os valores Passivos
-    passivo_1 = e_valor_hipoteca.get()
-    passivo_2 = e_valor_carro.get()
-    passivo_3 = e_valor_estudante.get()
-    passivo_4 = e_valor_dividas.get()
-
-    # verificando as entradas se pegaram os valores
-
-    if ativo_1 == '' or ativo_2 == '' or ativo_3 == '' or ativo_4 == '' or ativo_5 == '' or passivo_1 == '' or passivo_2 == '' or passivo_3 == '' or passivo_4 == '' :
-
-        print('Entra algum valor')
-
-        return
-
-    else:
-        # calculando o valor total de ativos
-        Total_ativos = float(ativo_1) + float(ativo_2) + float(ativo_3) + float(ativo_4) + float(ativo_5)
-
-        # calculando o valor total de passivos
-        Total_passivos = float(passivo_1) + float(passivo_2) + float(passivo_3) + float(passivo_4)
-
-        # calculando Patrimônio líquido
-        Patrimonio_líquido = Total_ativos - Total_passivos
-
-        l_resultado['text'] = 'R${:,.2f}'.format(Patrimonio_líquido)
-        
-botao_calcular = Button(framePassivos,command=calcular, width=12, anchor=CENTER, text=" Calcular".upper(), overrelief=RIDGE,  font=('ivy 9 bold '),bg=co1, fg=co0 )
-botao_calcular.place(x=10, y=310)
-
-janela.mainloop ()
+Aplication()
