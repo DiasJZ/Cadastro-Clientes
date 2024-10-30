@@ -182,7 +182,7 @@ class Aplication(Funcoes,Relatorios):
                                 bg="#808080", fg="white", font=('verdana', 8, 'bold'),command=self.deleta_cliente)
         self.bt_apagar.place(relx=0.8, rely=0.1, relwidth=0.1, relheight=0.15)
 
-        # label e entry - codigo -----------------------------
+        # label e entry - codigo
         self.lb_codigo = Label(self.frame1, text="Codigo",
                                bg="white", fg="#000000", font=('verdana', 10, 'bold'))
         self.lb_codigo.place(relx=0.05, rely=0.05)
@@ -191,7 +191,7 @@ class Aplication(Funcoes,Relatorios):
                                   bg="white", fg="#000000", font=('verdana', 10, 'bold'))
         self.entry_codigo.place(relx=0.05, rely=0.15, relwidth=0.08)
 
-        # label e entry - nome ----------------------------------
+        # label e entry - nome
         self.lb_nome = Label(self.frame1, text="Nome",
                              bg="white", fg="#000000", font=('verdana', 10, 'bold'))
         self.lb_nome.place(relx=0.05, rely=0.35)
@@ -200,7 +200,7 @@ class Aplication(Funcoes,Relatorios):
                                 bg="white", fg="#000000", font=('verdana', 10, 'bold'))
         self.entry_nome.place(relx=0.05, rely=0.45, relwidth=0.7)
 
-        # label e entry - Telfone--------------------------
+        # label e entry - Telfone
         self.lb_telfone = Label(self.frame1, text="Telefone",
                                 bg="white", fg="#000000", font=('verdana', 10, 'bold'))
         self.lb_telfone.place(relx=0.05, rely=0.6)
@@ -209,7 +209,7 @@ class Aplication(Funcoes,Relatorios):
                                    bg="white", fg="#000000", font=('verdana', 10, 'bold'))
         self.entry_telfone.place(relx=0.05, rely=0.7, relwidth=0.4)
 
-        # label e entry - Cidade -----------------------
+        # label e entry - Cidade
         self.lb_cidade = Label(self.frame1, text="Cidade",
                                bg="white", fg="#000000", font=('verdana', 10, 'bold'))
         self.lb_cidade.place(relx=0.5, rely=0.6)
