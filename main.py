@@ -159,63 +159,63 @@ class Aplication(Funcoes,Relatorios):
     def widgets_frame1(self):
         # botão limpar
         self.bt_limpar = Button(self.frame1, text="Limpar",
-                                bg="#808080", fg="white", font=('verdana', 8, 'bold'), command=self.limpar_campos)
+                                bg="#808080", fg="white", command=self.limpar_campos)
         self.bt_limpar.place(relx=0.2, rely=0.1, relwidth=0.1, relheight=0.15)
 
         # botão Buscar
         self.bt_buscar = Button(self.frame1, text="Buscar",
-                                bg="#808080", fg="white", font=('verdana', 8, 'bold'),command=self.Buscar_Cliente)
+                                bg="#808080", fg="white",command=self.Buscar_Cliente)
         self.bt_buscar.place(relx=0.3, rely=0.1, relwidth=0.1, relheight=0.15)
 
         # botão Novo
         self.bt_novo = Button(self.frame1, text="Novo",
-                                bg="#808080", fg="white", font=('verdana', 8, 'bold'),command=self.add_cliente)
+                                bg="#808080", fg="white",command=self.add_cliente)
         self.bt_novo.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.15)
 
         # Botão Altera
         self.bt_alterar = Button(self.frame1, text="Alterar",
-                                bg="#808080", fg="white", font=('verdana', 8, 'bold'),command=self.alterar_cliente)
+                                bg="#808080", fg="white",command=self.alterar_cliente)
         self.bt_alterar.place(relx=0.7, rely=0.1, relwidth=0.1, relheight=0.15)
 
         # Botão Apagar
         self.bt_apagar = Button(self.frame1, text="Apagar",
-                                bg="#808080", fg="white", font=('verdana', 8, 'bold'),command=self.deleta_cliente)
+                                bg="#808080", fg="white",command=self.deleta_cliente)
         self.bt_apagar.place(relx=0.8, rely=0.1, relwidth=0.1, relheight=0.15)
 
         # label e entry - codigo
         self.lb_codigo = Label(self.frame1, text="Codigo",
-                               bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+                               bg="white", fg="#000000")
         self.lb_codigo.place(relx=0.05, rely=0.05)
 
         self.entry_codigo = Entry(self.frame1, text="Codigo",
-                                  bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+                                  bg="white", fg="#000000")
         self.entry_codigo.place(relx=0.05, rely=0.15, relwidth=0.08)
 
         # label e entry - nome
         self.lb_nome = Label(self.frame1, text="Nome",
-                             bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+                             bg="white", fg="#000000")
         self.lb_nome.place(relx=0.05, rely=0.35)
 
         self.entry_nome = Entry(self.frame1,
-                                bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+                                bg="white", fg="#000000")
         self.entry_nome.place(relx=0.05, rely=0.45, relwidth=0.7)
 
         # label e entry - Telfone
         self.lb_telfone = Label(self.frame1, text="Telefone",
-                                bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+                                bg="white", fg="#000000")
         self.lb_telfone.place(relx=0.05, rely=0.6)
 
         self.entry_telfone = Entry(self.frame1,
-                                   bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+                                   bg="white", fg="#000000")
         self.entry_telfone.place(relx=0.05, rely=0.7, relwidth=0.4)
 
         # label e entry - Cidade
         self.lb_cidade = Label(self.frame1, text="Cidade",
-                               bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+                               bg="white", fg="#000000")
         self.lb_cidade.place(relx=0.5, rely=0.6)
 
         self.entry_cidade = Entry(self.frame1,
-                                  bg="white", fg="#000000", font=('verdana', 10, 'bold'))
+                                  bg="white", fg="#000000")
         self.entry_cidade.place(relx=0.5, rely=0.7, relwidth=0.5)
 
     def grid_cliente(self):
