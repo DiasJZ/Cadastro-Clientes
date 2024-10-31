@@ -1,13 +1,10 @@
 from tkinter import *
 from tkinter import ttk
 import sqlite3
-import  webbrowser
 
 root = Tk()
 
 class Relatorios():
-    def mostrar(self):
-        webbrowser.open('ficha_Cliente_'+self.nomerel+'.pdf')
     def Gerar_Ficha(self):
 
         self.codigorel = self.entry_codigo.get()
